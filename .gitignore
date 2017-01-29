@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+*.DS_Store
+
+# Vim temp/swap files
+*~
+*.swp
+*.swo
+
+build/
+sources-cache/
