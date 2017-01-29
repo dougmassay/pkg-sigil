@@ -46,7 +46,7 @@ SIGIL_SRC_DIR=/whatever ./pkg 32 sigil
 ```
 
 The output will be `build/linux/[32|64]/dist/Sigil-v*run.xz` which is the linux
-binary installer for sigil. This is self extracting makeself archive that will install Sigil to /opt/sigil if the script is run as root, or it will install to ~/opt/sigil if you run it as a normal user. It will require a minimum of (g)libc 2.19 to run.
+binary installer for sigil. This is a self extracting makeself archive that will install Sigil to /opt/sigil if the script is run as root, or it will install to ~/opt/sigil if you run it as a normal user. It will require a minimum of (g)libc 2.19 to run.
 
 Credits
 ---------
