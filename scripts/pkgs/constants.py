@@ -64,9 +64,15 @@ QT_PLUGINS = [
     'platforms', 'platforminputcontexts', 'position', 'printsupport',
     'sensors', 'sqldrivers', 'xcbglintegrations'
 ]
-PYQT_MODULES = ['%s.so' % x for x in (
-    'Qt', 'QtCore', 'QtGui', 'QtNetwork', 'QtMultimedia', 'QtMultimediaWidgets',
+PYQT_MODULES_FULL = ['%s.so' % x for x in (
+    'Qt', 'QtCore', 'QtDBus', 'QtGui', 'QtNetwork', 'QtMultimedia', 'QtMultimediaWidgets',
     'QtPrintSupport', 'QtSensors', 'QtSvg', 'QtWebKit', 'QtWebKitWidgets', 'QtWidgets'
+)]
+PYQT_MODULES = ['%s.so' % x for x in (
+    'Qt', 'QtCore', 'QtGui', 'QtNetwork', 'QtPrintSupport', 'QtSvg', 'QtWidgets'
+)]
+EXCLUDED_UIC_WIDGET_PLUGINS = ['%s.py' % x for x in (
+    'qaxcontainer', 'qscintilla', 'qtcharts', 'qtquickwidgets', 'qtwebenginewidgets', 'qtwebkit'
 )]
 
 _build_dir = None

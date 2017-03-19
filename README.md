@@ -26,7 +26,7 @@ Building the dependencies
 
 To make the linux sigil installer package, it uses docker. Docker images/containers can take up a lot of space, so be certain you know where your docker images are kept, and that you have plenty of disk-space there. The Sigil images themselves create a tmp filesystem of 6Gb (but is removed after the process runs).
 
-To build the 64bit and 32bit dependencies for calibre, run:
+To build the 64bit and 32bit dependencies for Sigil, run:
 
 ```
 ./pkg 64

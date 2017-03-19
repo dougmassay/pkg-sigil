@@ -9,6 +9,7 @@ import re
 import glob
 import shutil
 import errno
+import subprocess
 
 from .build_deps import init_env
 from .constants import (mkdtemp, SW, MAKEOPTS, QT_PREFIX, LIBDIR, PREFIX,
@@ -82,3 +83,7 @@ def main(args):
         f = glob.glob('{}/Sigil-v*.xz.run'.format(output))
         if not len(f):
             raise ValueError('Output package not found in {}!'.format(output))
+        else:
+            name = os.path.join(PKG_OUTPUT_DIR, '{}.xz.run'.format(installer_name))
+            with open(os.path.join(PKG_OUTPUT_DIR, 'sha256sum.txt'), 'wb') as f:
+                subprocess.check_call(['sha256sum', name], stdout=f)

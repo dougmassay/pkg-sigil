@@ -13,7 +13,7 @@ import textwrap
 
 from .constants import (py_ver, icu_ver, tcl_ver, build_dir, is64bit,
                         SIGIL_SRC_DIR, PYTHON, EXTRA_MANIFEST, PY_COMPILE_FILE, PATCHELF, LIBDIR,
-                        BASE_INSTALL_DIR, QT_PREFIX, QT_DLLS, QT_PLUGINS, PYQT_MODULES)
+                        BASE_INSTALL_DIR, QT_PREFIX, QT_DLLS, QT_PLUGINS, PYQT_MODULES, EXCLUDED_UIC_WIDGET_PLUGINS)
 
 
 compile_code = textwrap.dedent('''\
@@ -102,12 +102,34 @@ site_code = textwrap.dedent('''\
 setup_bash = textwrap.dedent('''\
         #!/bin/bash
 
+        function version_lt() {{
+            test "$(printf '%s\n' "$@" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)" != "$1";
+        }}
+
+        MINIMUMLIBC="2.19"
+        SYSTEMLIBC="$(ldd --version | awk '/ldd/{{print $NF}}')"
+
+        SKIPLIBCTEST=0
+        if [ "$1" == "skiplibctest" ]; then
+            SKIPLIBCTEST=1
+        fi
+
+        if [[ $SKIPLIBCTEST -ne 1 ]]; then
+            if version_lt $SYSTEMLIBC $MINIMUMLIBC; then
+                printf "You need libc version $MINIMUMLIBC or greater to run Sigil ($SYSTEMLIBC was found) -- aborting!\\n"
+                exit 1
+            fi
+        else
+            printf "Overriding glibc version check!\\n"
+        fi
+
         if [ $(id -u) -ne 0 ]; then
             HOME="$(getent passwd "$USER" | cut -d: -f6)"
             DEST="$HOME/opt"
             LAUNCHER=./user_sigil.sh
             PYVENV=./user_pyvenv.cfg
             DESKTOP="$HOME/.local/share/applications"
+            UNINSTALL=./remove_sigil_user
             #sed -ie "s|^Exec=sigil|Exec=$HOME/bin/sigil|g" ./sigil.desktop
             #sed -ie "s|^TryExec=sigil|TryExec=$HOME/bin/sigil|g" ./sigil.desktop
             perl -pi -e "s!Exec=sigil!Exec=$HOME/bin/sigil!g" ./sigil.desktop
@@ -121,6 +143,9 @@ setup_bash = textwrap.dedent('''\
             LAUNCHER=./system_sigil.sh
             PYVENV=./system_pyvenv.cfg
             DESKTOP=/usr/share/applications
+            UNINSTALL=./remove_sigil_root
+            #perl -pi -e "s!launch_root!launch!g" ./remove_sigil
+            #perl -pi -e "s!paths_root!paths!g" ./remove_sigil
             ICON=/usr/share/pixmaps
             BINDIR=/usr/bin
             MSG="Continue with the installation of Sigil to /opt/{0}? (rerun the installer WITHOUT root privileges to install Sigil to your home directory)"
@@ -139,6 +164,7 @@ setup_bash = textwrap.dedent('''\
                 \cp -rf ./{0} "$DEST/{0}"
                 \cp -f "$LAUNCHER" "$DEST/{0}/sigil.sh"
                 \cp -f "$PYVENV" "$DEST/{0}/python3/pyvenv.cfg"
+                \cp -f "$UNINSTALL" "$DEST/{0}/remove_sigil"
 
                 printf "\\nCreating link(s) ...\\n"
                 if [ ! -d "$BINDIR" ] && [ $(id -u) -ne 0 ]; then
@@ -164,9 +190,55 @@ setup_bash = textwrap.dedent('''\
                 ;;
             *)
                 printf "\\nSigil installation cancelled.\\n"
-                exit 0
+                exit 1
                 ;;
         esac
+        ''')
+
+user_paths = { 'launch'  : "os.path.expanduser('~/bin/sigil')",
+               'path'    : "os.path.expanduser('~/opt/sigil')",
+               'desktop' : "os.path.expanduser('~/.local/share/applications/sigil.desktop')",
+               'icon'    : "os.path.expanduser('~/.icons/sigil.png')" }
+
+root_paths = { 'launch'  : "'/usr/bin/sigil'",
+               'path'    : "'/opt/sigil'",
+               'desktop' : "'/usr/share/applications/sigil.desktop'",
+               'icon'    : "'/usr/share/pixmaps/sigil.png'" }
+
+uninstall_script = textwrap.dedent('''\
+        #!/usr/bin/env python
+
+        from __future__ import (unicode_literals, division, absolute_import,
+                        print_function)
+
+        import os
+        import shutil
+
+        def main():
+            launch = {launch}
+            paths = {{
+                'path'    : {path},
+                'desktop' : {desktop},
+                'icon'    : {icon}
+            }}
+
+            if os.path.islink(launch):
+                print("Removing the '{{}}' link from '{{}}'.".format(os.path.basename(launch), os.path.dirname(launch)))
+                os.unlink(launch)
+
+            for k, v in paths.items():
+                if k == 'path' and os.path.exists(v) and os.path.isdir(v):
+                    print("Removing the '{{}}' directory from '{{}}'.".format(os.path.basename(v), os.path.dirname(v)))
+                    shutil.rmtree(v)
+                elif os.path.exists(v) and os.path.isfile(v):
+                    print("Removing the '{{}}' file from '{{}}'.".format(os.path.basename(v), os.path.dirname(v)))
+                    os.remove(v)
+                else:
+                    print("'{{}}' not found in '{{}}'. Nothing done.".format(os.path.basename(v), os.path.dirname(v)))
+
+
+        if __name__ == '__main__':
+            main()
         ''')
 
 # Python standard modules location
@@ -250,7 +322,7 @@ def ignore_in_pyqt5_dirs(base, items, ignored_dirs=None):
     ans = []
     if ignored_dirs is None:
         ignored_dirs = {'.svn', '.bzr', '.git', 'doc', 'examples', 'includes', 'mkspecs',
-                       'plugins', 'qml', 'qsci', 'qt', 'sip', 'translations', 'uic', '__pycache__'}
+                       'plugins', 'qml', 'qsci', 'qt', 'sip', 'translations', 'port_v2', '__pycache__'}
     for name in items:
         path = os.path.join(base, name)
         if os.path.isdir(path):
@@ -260,6 +332,8 @@ def ignore_in_pyqt5_dirs(base, items, ignored_dirs=None):
             if name.rpartition('.')[-1] not in ('so', 'py'):
                 ans.append(name)
             if name.rpartition('.')[-1] == 'so' and name not in PYQT_MODULES:
+                ans.append(name)
+            if name.rpartition('.')[-1] == 'py' and name in EXCLUDED_UIC_WIDGET_PLUGINS:
                 ans.append(name)
     return ans
 
@@ -493,6 +567,12 @@ def create_setup():
     os.chmod(os.path.join(temp_folder, 'setup.sh'), 0o744)
 
 
+def create_uninstall(filename, paths):
+    with open(os.path.join(temp_folder, filename), 'wb') as f:
+        f.write(bytes(uninstall_script.format(**paths)))
+    os.chmod(os.path.join(temp_folder, filename), 0o755)
+
+
 def create_bytecompile():
     with open(os.path.join(build_dir(), PY_COMPILE_FILE), 'wb') as f:
         f.write(bytes(compile_code.format(py_dir)))
@@ -540,11 +620,11 @@ def main():
     create_qt_conf()
     create_qt_conf2()
     create_setup()
+    create_uninstall('remove_sigil_root', root_paths)
+    create_uninstall('remove_sigil_user', user_paths)
     # Create python script to be run by the custom-built python3 (to precompile python modules).
     # Will be run by the parent script - build_sigil.py.
     create_bytecompile()
-    # subprocess.check_call(['/sw/sw/bin/makeself.sh', '--xz', '--keep-umask', temp_folder, os.path.join(PKG_OUTPUT_DIR,
-    #                        installer_name+'.xz.run'), 'Sigil Installer', './setup.sh'])
 
 
 if __name__ == '__main__':
