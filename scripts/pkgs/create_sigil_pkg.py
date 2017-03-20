@@ -45,6 +45,9 @@ launcher_bash = textwrap.dedent('''\
 
         INST_DIR={}
 
+        SIGIL_PREFS_DIR="$HOME/.local/share/bundled-sigil-ebook/sigil"
+        export SIGIL_PREFS_DIR
+
         # Consolidate all of Sigil's files in one directory
         if [ -z "$SIGIL_EXTRA_ROOT" ]; then
           SIGIL_EXTRA_ROOT=$INST_DIR
