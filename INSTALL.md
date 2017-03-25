@@ -20,6 +20,7 @@ Make sure you download the correct installer for your system.
 Instructions to build the installer yourself [can be read here](./BUILD.md).
 
 <hr>
+
 ## Installing
 
 The uninstaller comes as Makeself self-extracting/installing archive. The only requirement to run it should be xz-utils (the archive uses xz compression). If it's not already executable, make it so and launch the installer by CDing to the directory you downloaded it to and running it in a terminal. You will be told where Sigil is going to be installed and prompted to continue/cancel.
