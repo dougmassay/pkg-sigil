@@ -9,7 +9,7 @@ This repository contains code to automate the process of building Sigil,
 including all its dependencies, from scratch, for the linux platform.
 
 In general, a build proceeds in two steps, first build all the dependencies, then
-build the Sigil installer itself.
+building Sigil and the installer package itself.
 
 Requirements
 ---------------
@@ -48,7 +48,7 @@ SIGIL_SRC_DIR=/whatever ./pkg 32 sigil
 ```
 
 The output will be `build/linux/[32|64]/dist/Sigil-vX.X.X.run.xz` which is the linux
-binary installer for sigil. This is a self extracting makeself archive that will install Sigil to /opt/sigil if the script is run as root, or it will install to ~/opt/sigil if you run it as a normal user. It will require a minimum of (g)libc 2.19 to run.
+binary installer for sigil. This is a self extracting Makeself archive that will install Sigil to /opt/sigil if the script is run as root, or it will install to ~/opt/sigil if you run it as a normal user. It will require a minimum of (g)libc 2.19 to run (ldd --version).
 
 Credits
 ---------

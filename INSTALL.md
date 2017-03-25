@@ -23,7 +23,7 @@ Instructions to build the installer yourself [can be read here](./BUILD.md).
 
 ## Installing
 
-The uninstaller comes as Makeself self-extracting/installing archive. The only requirement to run it should be xz-utils (the archive uses xz compression). If it's not already executable, make it so and launch the installer by CDing to the directory you downloaded it to and running it in a terminal. You will be told where Sigil is going to be installed and prompted to continue/cancel.
+The uninstaller comes as a [Makeself](https://github.com/megastep/makeself) self-extracting/installing archive. The only requirement to run it should be xz-utils (the archive uses xz compression). If it's not already executable, make it so and launch the installer by CDing to the directory you downloaded it to and running it in a terminal. You will be told where Sigil is going to be installed and prompted to continue/cancel.
 
 This version of Sigil can be installed in one of two ways:
 
@@ -31,7 +31,7 @@ This version of Sigil can be installed in one of two ways:
 
 >`sudo ./Sigil-vX.X.X-Linux-x86(_64).xz.run`
 
-If the Sigil installer is run as root, it will extract to a temporary directory and install the bulk of its contents to /opt/Sigil. The following files/links will also be created:
+If the Sigil installer is run as root, it will extract to a temporary directory and install the bulk of its contents to the /opt/Sigil directory. The rest of the files/links to be installed are as follows:
 
 - /usr/bin/sigil (a link to the launch script in /opt/sigil)
 - /usr/share/applications/sigil.desktop
@@ -47,13 +47,13 @@ Some systems may be able to launch an xterm by double-clicking the installer.
 
 With this option, Sigil can be installed entirely within the user's home directory. Handy for those who don't like running random internet scripts as root.
 
-When the Sigil installer is run as a normal user, it will extract to a temporary directory and install the bulk of its contents to $HOME/opt/Sigil. The following files/links will also be created:
+When the Sigil installer is run as a normal user, it will extract to a temporary directory and install the bulk of its contents to the $HOME/opt/Sigil directory. The rest of the files/links to be installed are as follows:
 
 - $HOME/bin/sigil
 - $HOME/.local/share/applications/sigil.desktop
 - $HOME/.icons/sigil.png
 
-Sigil can either be launched from the Desktop Environment's menu system (under Office), or by typing `$HOME/bin/sigil` at a terminal (or just `sigil` if $HOME/bin is in your $PATH).
+Sigil can either be launched from the Desktop Environment's menu system (under Office), or by typing `~/bin/sigil` at a terminal (or just `sigil` if $HOME/bin is in your $PATH).
 
 ### Preference Directory
 
@@ -69,7 +69,7 @@ or
 
 >`~/opt/sigil/remove_sigil`
 
-The Sigil preference directory "$HOME/.local/share/bundled-sigil-ebook/sigil/" will not be removed.
+The Sigil preference directory "$HOME/.local/share/bundled-sigil-ebook/sigil/" will not be removed with this script.
 
 ### Expected functionality
 
