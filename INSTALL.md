@@ -55,6 +55,8 @@ When the Sigil installer is run as a normal user, it will extract to a temporary
 
 Sigil can either be launched from the Desktop Environment's menu system (under Office), or by typing `~/bin/sigil` at a terminal (or just `sigil` if $HOME/bin is in your $PATH).
 
+**ONCE INSTALLED, YOU CANNOT RELOCATE THE SIGIL INSTALLATION WITHOUT BREAKING FUNCTIONALITY!! THIS VERSION OF SIGIL CONTAINS EVERYTHING YOU NEED RUN SIGIL AND USE PLUGINS, BUT IT IS NOT A PORTABLE VERSION!!**
+
 ### Preference Directory
 
 This standalone version of Sigil's preference directory is being kept separate from the official version's prefs directory. You can always open it by using Edit->Preferences->Open Preferences Location from within Sigil, but it's currently the $HOME/.local/share/bundled-sigil-ebook/sigil/ directory.
