@@ -10,12 +10,10 @@ Unofficial Self-Contained Sigil Package/Installer for Linux
 
 <hr>
 
-### If your distro has Sigil in its software repositories, I strongly recommend installing Sigil that way instead of using this unofficial binary installer.
-
 ### Read/Download [Latest Release](https://github.com/dougmassay/pkg-sigil/releases/latest)
 
 ### For instructions on downloading/installing/uninstalling the Sigil self-contained Linux package/installer see [the INSTALL.md document](./INSTALL.md).
 
 ### For instuctions on how to build the self-contained Linux package/installer yourself, see [the BUILD.md document](./BUILD.md).
 
-#### NOTE: Please do not report issues with this unofficial Sigil release in any of the official Sigil channels or forums. Use [this repository's issue system instead](https://github.com/dougmassay/pkg-sigil/issues) instead. If your issue is deemed to be a problem with the upstream Sigil code, I will open an upstream issue with the official Sigil myself. Sigil feature requests raised here will be closed without comment.
+#### NOTE: Please do not report issues with this Sigil installer in the official Sigil issue tracker. Use [this repository's issue system instead](https://github.com/dougmassay/pkg-sigil/issues) instead. Sigil feature requests raised here will also be closed without comment.
