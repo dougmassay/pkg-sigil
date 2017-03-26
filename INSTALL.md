@@ -31,7 +31,7 @@ This version of Sigil can be installed in one of two ways:
 
 >`sudo ./Sigil-vX.X.X-Linux-x86(_64).xz.run`
 
-If the Sigil installer is run as root, it will extract to a temporary directory and install the bulk of its contents to the /opt/Sigil directory. The rest of the files/links to be installed are as follows:
+If the Sigil installer is run as root, it will extract to a temporary directory and install the bulk of its contents to the /opt/sigil directory. The rest of the files/links to be installed are as follows:
 
 - /usr/bin/sigil (a link to the launch script in /opt/sigil)
 - /usr/share/applications/sigil.desktop
@@ -47,7 +47,7 @@ Some systems may be able to launch an xterm by double-clicking the installer.
 
 With this option, Sigil can be installed entirely within the user's home directory. Handy for those who don't like running random internet scripts as root.
 
-When the Sigil installer is run as a normal user, it will extract to a temporary directory and install the bulk of its contents to the $HOME/opt/Sigil directory. The rest of the files/links to be installed are as follows:
+When the Sigil installer is run as a normal user, it will extract to a temporary directory and install the bulk of its contents to the $HOME/opt/sigil directory. The rest of the files/links to be installed are as follows:
 
 - $HOME/bin/sigil
 - $HOME/.local/share/applications/sigil.desktop
@@ -61,7 +61,7 @@ This standalone version of Sigil's preference directory is being kept separate f
 
 ### Uninstalling Sigil
 
-An uninstall script get's extracted to Sigil main installation directory called 'remove_sigil'. Simply run it to remove Sigil from your system. You'll need to run it as root if you installed Sigil system-wide to /opt/sigil. Otherwise you can run it as a normal user.
+An uninstall script called 'remove_sigil' gets extracted to Sigil main installation directory. Simply run it to remove Sigil from your system. You'll need to run it as root if you installed Sigil system-wide to /opt/sigil. Otherwise you can run it as a normal user.
 
 >`sudo /opt/sigil/remove_sigil`
 
@@ -77,7 +77,7 @@ Everything should function exactly as the official version of Sigil with the exc
 
 ### Troubleshooting
 
-The installer aborts if it detects a glibc version less than 2.19. If you feel the check is not reporting your glibc version correctly, you may override the check by passing the "skiplibctest" parameter to the installer. You're own your own if Sigil doesn't work, though.
+The installer aborts if it detects a glibc version less than 2.19. If you feel the check is not reporting your glibc version correctly, you may override the check by passing the "skiplibctest" parameter to the installer. You're on own your own if Sigil doesn't work, though.
 
 > `./Sigil-vX.X.X-Linux-x86(_64).xz.run skiplibctest`
 

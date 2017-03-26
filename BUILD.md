@@ -5,19 +5,16 @@ See [installing/removing the unofficial standalone version of Sigil](./INSTALL.m
 
 The code in this repository is ONLY intended to run on linux.
 
-This repository contains code to automate the process of building Sigil,
-including all its dependencies, from scratch, for the linux platform.
+This repository contains code to automate the process of building Sigil, including all its dependencies, from scratch, for the linux platform.
 
-In general, a build proceeds in two steps, first build all the dependencies, then
-building Sigil and the installer package itself.
+In general, a build proceeds in two steps, first build all the dependencies, then building Sigil and the installer package itself.
 
 Requirements
 ---------------
 
 You need to have [docker](https://www.docker.com/) installed and running as the linux builds are done in a docker Ubuntu 14.04 (Trusty) container. Most linux distributions have docker in their standard repositories.
 
-Set the environment variable `SIGIL_SRC_DIR` to point to the location of
-the sigil source code. For example, if you unzipped the calibre source archive into: `/usr/dev/sigil-src` then set the environment variable as:
+Set the environment variable `SIGIL_SRC_DIR` to point to the location of the sigil source code. For example, if you unzipped the calibre source archive into: `/usr/dev/sigil-src` then set the environment variable as:
 
 ```
 export SIGIL_SRC_DIR=/usr/dev/sigil-src
