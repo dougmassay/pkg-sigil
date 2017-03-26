@@ -12,7 +12,7 @@ Unofficial Self-Contained Sigil Package/Installer for Linux
 
 ### Read/Download [Latest Release](https://github.com/dougmassay/pkg-sigil/releases/latest)
 
-### For instructions on downloading/installing/uninstalling the Sigil self-contained Linux package/installer see [the INSTALL.md document](./INSTALL.md).
+### For instructions on downloading/installing/uninstalling this self-contained version of Sigil for Linux see [the INSTALL.md document](./INSTALL.md).
 
 ### For instuctions on how to build the self-contained Linux package/installer yourself, see [the BUILD.md document](./BUILD.md).
 
