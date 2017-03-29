@@ -10,7 +10,7 @@ Unofficial Self-Contained Sigil Package/Installer for Linux
 
 <hr>
 
-### NOTE: some people are reporting installer-script syntax errors when using various shells. Until I make some changes to make the shell-script more "portable," try explicitly using a bash shell to launch the installer. Using the skiplibctest argument as described in the trouble-shooting section of the INSTALL documentation (if you're certain your libc is recent enough) may work around the issue as well.
+### NOTE: some people are reporting installer-script syntax errors when using various shells. Until I make some changes to make the shell-script more "portable," try explicitly using a bash shell to launch the installer. Using the skiplibctest argument as described in the [trouble-shooting section of the INSTALL documentation](./INSTALL.md#troubleshooting) (if you're certain your libc is recent enough) may work around the issue as well.
 
 <hr>
 
