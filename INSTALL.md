@@ -79,7 +79,9 @@ Everything should function exactly as the official version of Sigil with the exc
 
 ### Troubleshooting
 
-The installer aborts if it detects a glibc version less than 2.19. If you feel the check is not reporting your glibc version correctly, you may override the check by passing the "skiplibctest" parameter to the installer. You're on own your own if Sigil doesn't work, though.
+**Note:** some people are reporting installer-script syntax errors when using various shells. Until I make some changes to make the shell-script more "portable," try explicitly using a bash shell to launch the installer. Using the skiplibctest argument as described below (if you're certain your libc is recent enough) may work around the issue as well.
+
+The installer aborts if it detects a glibc version less than 2.19. If you feel the check is not reporting your glibc version correctly, you may override the check by passing the "skiplibctest" argument to the installer. You're on own your own if Sigil doesn't work, though.
 
 > `./Sigil-vX.X.X-Linux-x86(_64).xz.run skiplibctest`
 

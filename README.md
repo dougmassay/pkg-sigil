@@ -10,6 +10,10 @@ Unofficial Self-Contained Sigil Package/Installer for Linux
 
 <hr>
 
+### NOTE: some people are reporting installer-script syntax errors when using various shells. Until I make some changes to make the shell-script more "portable," try explicitly using a bash shell to launch the installer. Using the skiplibctest argument as described in the trouble-shooting section of the INSTALL documentation (if you're certain your libc is recent enough) may work around the issue as well.
+
+<hr>
+
 ### Read/Download [Latest Release](https://github.com/dougmassay/pkg-sigil/releases/latest)
 
 ### For instructions on downloading/installing/uninstalling this self-contained version of Sigil for Linux see [the INSTALL.md document](./INSTALL.md).
