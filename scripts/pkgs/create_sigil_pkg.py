@@ -105,7 +105,7 @@ site_code = textwrap.dedent('''\
 setup_bash = textwrap.dedent('''\
         #!/bin/bash
 
-        function version_lt() {{
+        version_lt() {{
             test "$(printf '%s\n' "$@" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)" != "$1";
         }}
 
