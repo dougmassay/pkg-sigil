@@ -273,13 +273,17 @@ def set_rpath(f, depth=0):
         return
 
 
+regex_lib = '_regex.cpython-35m-i386-linux-gnu.so'
+if is64bit:
+    regex_lib = '_regex.cpython-35m-x86_64-linux-gnu.so'
+    
 # Cherry-picked additional and/or modified modules
 site_packages = [ ('lxml', 'd'),
                   ('six.py', 'f'),
                   ('html5lib', 'd'),
                   ('PIL', 'd'),
                   ('regex.py', 'f'),
-                  ('_regex.cpython-35m-x86_64-linux-gnu.so', 'f'),
+                  (regex_lib, 'f'),
                   ('_regex_core.py', 'f'),
                   ('test_regex.py', 'f'),
                   ('cssselect', 'd'),
