@@ -102,101 +102,101 @@ site_code = textwrap.dedent('''\
             main()
             ''')
 
-setup_bash = textwrap.dedent('''\
-        #!/bin/bash
+setup_bash = '''\
+#!/bin/bash
 
-        version_lt() {{
-            test "$(printf '%s\n' "$@" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)" != "$1";
-        }}
+version_lt() {{
+    test "$(printf '%s\n' "$@" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)" != "$1";
+}}
 
-        MINIMUMLIBC="2.19"
-        SYSTEMLIBC="$(ldd --version | awk '/ldd/{{print $NF}}')"
+MINIMUMLIBC="2.19"
+SYSTEMLIBC="$(ldd --version | awk '/ldd/{{print $NF}}')"
 
-        SKIPLIBCTEST=0
-        if [ "$1" == "skiplibctest" ]; then
-            SKIPLIBCTEST=1
+SKIPLIBCTEST=0
+if [ "$1" = "skiplibctest" ]; then
+    SKIPLIBCTEST=1
+fi
+
+if [ $SKIPLIBCTEST -ne 1 ]; then
+    if version_lt $SYSTEMLIBC $MINIMUMLIBC; then
+        printf "You need libc version $MINIMUMLIBC or greater to run Sigil ($SYSTEMLIBC was found) -- aborting!\\n"
+        exit 1
+    fi
+else
+    printf "Overriding glibc version check!\\n"
+fi
+
+if [ $(id -u) -ne 0 ]; then
+    HOME="$(getent passwd "$USER" | cut -d: -f6)"
+    DEST="$HOME/opt"
+    LAUNCHER=./user_sigil.sh
+    PYVENV=./user_pyvenv.cfg
+    DESKTOP="$HOME/.local/share/applications"
+    UNINSTALL=./remove_sigil_user
+    #sed -ie "s|^Exec=sigil|Exec=$HOME/bin/sigil|g" ./sigil.desktop
+    #sed -ie "s|^TryExec=sigil|TryExec=$HOME/bin/sigil|g" ./sigil.desktop
+    perl -pi -e "s!Exec=sigil!Exec=$HOME/bin/sigil!g" ./sigil.desktop
+    perl -pi -e "s!TryExec=sigil!TryExec=$HOME/bin/sigil!g" ./sigil.desktop
+    chmod a+x ./sigil.desktop
+    ICON="$HOME/.icons"
+    BINDIR="$HOME/bin"
+    MSG="Continue with the installation of Sigil to $DEST/{0}? (rerun the installer with root privileges to install Sigil system-wide)"
+else
+    DEST=/opt
+    LAUNCHER=./system_sigil.sh
+    PYVENV=./system_pyvenv.cfg
+    DESKTOP=/usr/share/applications
+    UNINSTALL=./remove_sigil_root
+    #perl -pi -e "s!launch_root!launch!g" ./remove_sigil
+    #perl -pi -e "s!paths_root!paths!g" ./remove_sigil
+    ICON=/usr/share/pixmaps
+    BINDIR=/usr/bin
+    MSG="Continue with the installation of Sigil to /opt/{0}? (rerun the installer WITHOUT root privileges to install Sigil to your home directory)"
+fi
+
+read -r -p "$MSG [y/N] " response
+case $response in
+    [yY][eE][sS]|[yY])
+        if [ -d "$DEST/{0}" ]; then
+            rm -rf "$DEST/{0}"
         fi
-
-        if [[ $SKIPLIBCTEST -ne 1 ]]; then
-            if version_lt $SYSTEMLIBC $MINIMUMLIBC; then
-                printf "You need libc version $MINIMUMLIBC or greater to run Sigil ($SYSTEMLIBC was found) -- aborting!\\n"
-                exit 1
-            fi
-        else
-            printf "Overriding glibc version check!\\n"
+        if [ ! -d "$DEST" ] && [ $(id -u) -ne 0 ]; then
+            mkdir -p "$DEST"
         fi
+        printf "\\nCopying files to $DEST/{0} ...\\n"
+        \cp -rf ./{0} "$DEST/{0}"
+        \cp -f "$LAUNCHER" "$DEST/{0}/sigil.sh"
+        \cp -f "$PYVENV" "$DEST/{0}/python3/pyvenv.cfg"
+        \cp -f "$UNINSTALL" "$DEST/{0}/remove_sigil"
 
-        if [ $(id -u) -ne 0 ]; then
-            HOME="$(getent passwd "$USER" | cut -d: -f6)"
-            DEST="$HOME/opt"
-            LAUNCHER=./user_sigil.sh
-            PYVENV=./user_pyvenv.cfg
-            DESKTOP="$HOME/.local/share/applications"
-            UNINSTALL=./remove_sigil_user
-            #sed -ie "s|^Exec=sigil|Exec=$HOME/bin/sigil|g" ./sigil.desktop
-            #sed -ie "s|^TryExec=sigil|TryExec=$HOME/bin/sigil|g" ./sigil.desktop
-            perl -pi -e "s!Exec=sigil!Exec=$HOME/bin/sigil!g" ./sigil.desktop
-            perl -pi -e "s!TryExec=sigil!TryExec=$HOME/bin/sigil!g" ./sigil.desktop
-            chmod a+x ./sigil.desktop
-            ICON="$HOME/.icons"
-            BINDIR="$HOME/bin"
-            MSG="Continue with the installation of Sigil to $DEST/{0}? (rerun the installer with root privileges to install Sigil system-wide)"
-        else
-            DEST=/opt
-            LAUNCHER=./system_sigil.sh
-            PYVENV=./system_pyvenv.cfg
-            DESKTOP=/usr/share/applications
-            UNINSTALL=./remove_sigil_root
-            #perl -pi -e "s!launch_root!launch!g" ./remove_sigil
-            #perl -pi -e "s!paths_root!paths!g" ./remove_sigil
-            ICON=/usr/share/pixmaps
-            BINDIR=/usr/bin
-            MSG="Continue with the installation of Sigil to /opt/{0}? (rerun the installer WITHOUT root privileges to install Sigil to your home directory)"
+        printf "\\nCreating link(s) ...\\n"
+        if [ ! -d "$BINDIR" ] && [ $(id -u) -ne 0 ]; then
+            mkdir -p "$BINDIR"
         fi
+        ln -sfv "$DEST/{0}/sigil.sh" "$BINDIR/sigil"
 
-        read -r -p "$MSG [y/N] " response
-        case $response in
-            [yY][eE][sS]|[yY])
-                if [ -d "$DEST/{0}" ]; then
-                    rm -rf "$DEST/{0}"
-                fi
-                if [ ! -d "$DEST" ] && [ $(id -u) -ne 0 ]; then
-                    mkdir -p "$DEST"
-                fi
-                printf "\\nCopying files to $DEST/{0} ...\\n"
-                \cp -rf ./{0} "$DEST/{0}"
-                \cp -f "$LAUNCHER" "$DEST/{0}/sigil.sh"
-                \cp -f "$PYVENV" "$DEST/{0}/python3/pyvenv.cfg"
-                \cp -f "$UNINSTALL" "$DEST/{0}/remove_sigil"
+        printf "\\nCreating desktop and icon entries ...\\n"
+        if [ ! -d "$ICON" ] && [ $(id -u) -ne 0 ]; then
+            mkdir -p "$ICON"
+        fi
+        \cp -fv ./app_icon_48.png "$ICON/sigil.png"
 
-                printf "\\nCreating link(s) ...\\n"
-                if [ ! -d "$BINDIR" ] && [ $(id -u) -ne 0 ]; then
-                    mkdir -p "$BINDIR"
-                fi
-                ln -sfv "$DEST/{0}/sigil.sh" "$BINDIR/sigil"
+        sleep 2
+        if [ ! -d "$DESKTOP" ] && [ $(id -u) -ne 0 ]; then
+            mkdir -p "$DESKTOP"
+        fi
+        \cp -fv ./sigil.desktop "$DESKTOP/sigil.desktop"
 
-                printf "\\nCreating desktop and icon entries ...\\n"
-                if [ ! -d "$ICON" ] && [ $(id -u) -ne 0 ]; then
-                    mkdir -p "$ICON"
-                fi
-                \cp -fv ./app_icon_48.png "$ICON/sigil.png"
+        #touch -d -c "$DESKTOP/sigil.desktop"
 
-                sleep 2
-                if [ ! -d "$DESKTOP" ] && [ $(id -u) -ne 0 ]; then
-                    mkdir -p "$DESKTOP"
-                fi
-                \cp -fv ./sigil.desktop "$DESKTOP/sigil.desktop"
-
-                #touch -d -c "$DESKTOP/sigil.desktop"
-
-                printf "\\nSigil installation complete.\\n"
-                ;;
-            *)
-                printf "\\nSigil installation cancelled.\\n"
-                exit 1
-                ;;
-        esac
-        ''')
+        printf "\\nSigil installation complete.\\n"
+        ;;
+    *)
+        printf "\\nSigil installation cancelled.\\n"
+        exit 1
+        ;;
+esac
+'''
 
 user_paths = { 'launch'  : "os.path.expanduser('~/bin/sigil')",
                'path'    : "os.path.expanduser('~/opt/sigil')",
