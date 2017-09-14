@@ -200,9 +200,9 @@
     {
         "name": "libxml2",
         "unix": {
-            "filename": "libxml2-d8083bf77955b7879c1290f0c0a24ab8cc70f7fb.tar.gz",
-            "hash": "empty:d8083bf77955b7879c1290f0c0a24ab8cc70f7fb",
-            "urls":["https://github.com/GNOME/libxml2/archive/d8083bf77955b7879c1290f0c0a24ab8cc70f7fb.tar.gz"]
+            "filename": "libxml2-2.9.5.tar.gz",
+            "hash": "sha256:4031c1ecee9ce7ba4f313e91ef6284164885cdb69937a123f6a83bb6a72dcd38",
+            "urls":["ftp://xmlsoft.org/libxml2/{filename}"]
         }
     },
 
@@ -218,8 +218,8 @@
     {
         "name": "libxslt",
         "unix": {
-            "filename": "libxslt-1.1.29.tar.gz",
-            "hash": "md5:a129d3c44c022de3b9dcf6d6f288d72e",
+            "filename": "libxslt-1.1.30.tar.gz",
+            "hash": "sha256:ba65236116de8326d83378b2bd929879fa185195bc530b9d1aba72107910b6b3",
             "urls": ["ftp://xmlsoft.org/libxslt/{filename}"]
         }
     },
